@@ -75,74 +75,116 @@
             const questions = [
                 {
                     id: 'age',
-                    question: '연령대를 선택해주세요',
+                    question: '🎂 몇 살이세요? (나이는 숫자일 뿐!)',
                     type: 'single',
                     options: [
-                        { value: '20s', label: '20대' },
-                        { value: '30s', label: '30대' },
-                        { value: '40s', label: '40대' },
-                        { value: '50s', label: '50대' },
-                        { value: '60plus', label: '60대 이상' }
+                        { value: '20s', label: '20대 - 아직 젊다! 🔥' },
+                        { value: '30s', label: '30대 - 인생의 전성기 💪' },
+                        { value: '40s', label: '40대 - 경험과 체력의 황금비율 ⭐' },
+                        { value: '50s', label: '50대 - 건강이 재산! 💎' },
+                        { value: '60plus', label: '60대 이상 - 나이는 진짜 숫자일 뿐 😎' }
+                    ]
+                },
+                {
+                    id: 'fitness_level',
+                    question: '💪 솔직히... 현재 체력은 어때요?',
+                    type: 'single',
+                    options: [
+                        { value: 'low', label: '계단만 올라도 숨참... 🥵 (운동이 절실!)' },
+                        { value: 'medium_low', label: '일상생활은 가능! 근데 운동은... 😅' },
+                        { value: 'medium', label: '평범해요~ 가끔 운동도 하고 🙂' },
+                        { value: 'medium_high', label: '꽤 괜찮아요! 운동 좀 해왔어요 💪' },
+                        { value: 'high', label: '제 체력 믿으세요! 고강도도 OK 🔥' }
                     ]
                 },
                 {
                     id: 'goal',
-                    question: '운동 목표를 선택해주세요',
-                    type: 'single',
+                    question: '🎯 운동으로 이루고 싶은 것은? (최대 2개만!)',
+                    type: 'multiple',
+                    maxSelect: 2,
                     options: [
-                        { value: 'weight', label: '체중 감량' },
-                        { value: 'muscle', label: '근력 강화' },
-                        { value: 'health', label: '건강 유지' },
-                        { value: 'flexibility', label: '유연성 향상' },
-                        { value: 'rehabilitation', label: '재활/회복' }
-                    ]
-                },
-                {
-                    id: 'experience',
-                    question: '운동 경험 수준은 어떠신가요?',
-                    type: 'single',
-                    options: [
-                        { value: 'beginner', label: '초보자 (운동 경험 거의 없음)' },
-                        { value: 'intermediate', label: '중급자 (꾸준히 운동 중)' },
-                        { value: 'advanced', label: '상급자 (운동 경험 풍부)' }
+                        { value: 'weight', label: '🔥 살 빼기 프로젝트! (여름이 다가온다...)' },
+                        { value: 'muscle', label: '💪 근육 키우기 (팔뚝 좀 봐봐!)' },
+                        { value: 'health', label: '🏥 건강 챙기기 (병원은 이제 그만...)' },
+                        { value: 'flexibility', label: '🧘 유연해지기 (발 닿았으면...)' },
+                        { value: 'rehabilitation', label: '🩹 재활/회복 (아픈 곳을 고치자)' },
+                        { value: 'stress', label: '😌 스트레스 날려버리기 (힐링 필수!)' }
                     ]
                 },
                 {
                     id: 'health',
-                    question: '현재 건강 상태를 선택해주세요 (중복 선택 가능)',
+                    question: '🏥 혹시 조심해야 할 부분이 있나요?',
                     type: 'multiple',
                     options: [
-                        { value: 'normal', label: '특이사항 없음' },
-                        { value: 'joint', label: '관절 통증' },
-                        { value: 'back', label: '허리 통증' },
-                        { value: 'cardio', label: '심혈관 주의' },
-                        { value: 'diabetes', label: '당뇨 관리' }
+                        { value: 'normal', label: '✨ 완전 건강체! 문제없어요' },
+                        { value: 'joint', label: '🦴 관절이 좀... (무릎, 어깨가 시위 중)' },
+                        { value: 'back', label: '😫 허리가 좀... (앉아있기 힘들어요)' },
+                        { value: 'cardio', label: '❤️ 심장/혈압 주의 (의사가 운동하래요)' },
+                        { value: 'diabetes', label: '🩸 당뇨 관리 중 (혈당 체크 필수)' },
+                        { value: 'obesity', label: '⚖️ 고도비만 (이것도 고민이에요)' },
+                        { value: 'respiratory', label: '🫁 호흡기 약함 (천식이 있어요)' }
                     ]
                 },
                 {
                     id: 'preference',
-                    question: '선호하는 운동 형태는 무엇인가요?',
+                    question: '🤔 어떤 운동이 끌리세요?',
                     type: 'single',
                     options: [
-                        { value: 'indoor', label: '실내 운동' },
-                        { value: 'water', label: '수중 운동' },
-                        { value: 'group', label: '그룹 운동' },
-                        { value: 'personal', label: '개인 운동' }
+                        { value: 'water', label: '🏊 수영장 좋아요! (물에서 놀기 최고)' },
+                        { value: 'gym', label: '🏋️ 헬스장 러버! (기구가 나를 부른다)' },
+                        { value: 'group', label: '👯 함께하는 수업! (혼자는 외로워)' },
+                        { value: 'court', label: '🏐 체육관에서 뛰기! (공 다루는 재미)' },
+                        { value: 'mind_body', label: '🧘 요가/필라테스 (몸과 마음의 평화)' }
                     ]
                 },
                 {
-                    id: 'time',
-                    question: '주당 운동 가능 시간은 얼마나 되시나요?',
+                    id: 'exercise_time',
+                    question: '⏰ 언제 운동하실 건가요? (중복 선택 OK!)',
+                    type: 'multiple',
+                    options: [
+                        { value: 'early', label: '🌅 새벽/오전 (일찍 일어나는 새가 건강해!)' },
+                        { value: 'afternoon', label: '☀️ 오후 (점심 먹고 소화운동?)' },
+                        { value: 'evening', label: '🌆 퇴근 후 저녁 (회사 스트레스 날리기)' },
+                        { value: 'weekend', label: '🎉 주말만! (평일은 못 일어남)' }
+                    ]
+                },
+                {
+                    id: 'frequency',
+                    question: '📅 일주일에 몇 번이나 올 수 있어요?',
                     type: 'single',
                     options: [
-                        { value: '1-2', label: '주 1-2회 (1-2시간)' },
-                        { value: '3-4', label: '주 3-4회 (3-5시간)' },
-                        { value: '5plus', label: '주 5회 이상 (6시간 이상)' }
+                        { value: '1-2', label: '주 1-2회 - 천천히 시작해볼게요 😊' },
+                        { value: '3-4', label: '주 3-4회 - 진지하게 해보려고요! 💪' },
+                        { value: '5plus', label: '주 5회 이상 - 완전 작심하고 왔어요 🔥' },
+                        { value: 'daily', label: '매일 - 운동이 제 일상입니다 😎' }
+                    ]
+                },
+                {
+                    id: 'intensity',
+                    question: '🔋 얼마나 빡세게 하고 싶으세요?',
+                    type: 'single',
+                    options: [
+                        { value: 'light', label: '🍃 가볍게~ (땀 안 나도 됨)' },
+                        { value: 'moderate', label: '😊 적당히! (약간 숨차는 정도)' },
+                        { value: 'high', label: '🔥 빡세게! (땀 뻘뻘 흘려야 운동한 느낌)' },
+                        { value: 'mixed', label: '🎭 그날그날 달라요 (기분따라~)' }
+                    ]
+                },
+                {
+                    id: 'companion',
+                    question: '👥 누구랑 운동하실 건가요?',
+                    type: 'single',
+                    options: [
+                        { value: 'alone', label: '😌 나 혼자! (집중할 수 있어서 좋아요)' },
+                        { value: 'friend', label: '👫 친구랑! (수다 떨면서 운동)' },
+                        { value: 'family', label: '👨‍👩‍👧 배우자/가족과! (가족 건강이 최고)' },
+                        { value: 'child', label: '👶 아이와 함께! (같이 놀면서 운동)' },
+                        { value: 'group', label: '🎉 새로운 사람들 만나고 싶어요! (운동 친구 모집)' }
                     ]
                 }
             ];
 
-            const handleAnswer = (questionId, value, isMultiple = false) => {
+            const handleAnswer = (questionId, value, isMultiple = false, maxSelect = null) => {
                 if (isMultiple) {
                     const currentAnswers = answers[questionId] || [];
                     if (currentAnswers.includes(value)) {
@@ -151,6 +193,10 @@
                             [questionId]: currentAnswers.filter(v => v !== value)
                         });
                     } else {
+                        // maxSelect 체크
+                        if (maxSelect && currentAnswers.length >= maxSelect) {
+                            return; // 최대 선택 개수 초과 시 무시
+                        }
                         setAnswers({
                             ...answers,
                             [questionId]: [...currentAnswers, value]
@@ -171,95 +217,160 @@
                     facilities: []
                 };
 
-                // 연령과 목표에 따른 운동 추천
-                if (answers.goal === 'weight') {
-                    recommendations.exercises.push(
-                        { name: '유산소 운동', desc: '트레드밀, 사이클, 조깅 등 심폐 지구력 향상', duration: '30-45분', frequency: '주 4-5회' },
-                        { name: '에어로빅', desc: '근력과 유산소를 결합한 다이내믹 운동', duration: '50분', frequency: '주 3-4회' }
-                    );
-                }
-
-                if (answers.goal === 'muscle') {
-                    recommendations.exercises.push(
-                        { name: '헬스 트레이닝', desc: '머신과 프리웨이트를 이용한 근력 운동', duration: '50-60분', frequency: '주 3-4회' },
-                        { name: '기능성 운동', desc: '코어와 전신 근력 강화 운동', duration: '40분', frequency: '주 3회' }
-                    );
-                }
-
-                if (answers.goal === 'health' || answers.age === '60plus') {
-                    recommendations.exercises.push(
-                        { name: '걷기/파워워킹', desc: '관절에 무리가 적은 유산소 운동', duration: '30-40분', frequency: '매일' },
-                        { name: '프롭 테라피', desc: '나무토막을 이용한 스트레칭과 근력 강화', duration: '50분', frequency: '주 3회' }
-                    );
-                }
-
-                if (answers.goal === 'flexibility') {
-                    recommendations.exercises.push(
-                        { name: '요가', desc: '유연성과 밸런스, 심신 안정', duration: '50분', frequency: '주 3-4회' },
-                        { name: '필라테스', desc: '코어 강화와 자세 교정', duration: '50분', frequency: '주 2-3회' }
-                    );
-                }
-
-                // 건강 상태에 따른 조정
+                const goals = answers.goal || [];
                 const healthIssues = answers.health || [];
-                if (healthIssues.includes('joint') || healthIssues.includes('back')) {
+                const fitnessLevel = answers.fitness_level;
+                const intensity = answers.intensity;
+                const exerciseTime = answers.exercise_time || [];
+
+                // 목표별 운동 추천
+                if (goals.includes('weight')) {
+                    if (intensity === 'high' && fitnessLevel === 'high') {
+                        recommendations.exercises.push(
+                            { name: '고강도 인터벌 트레이닝 🔥', desc: '빠르게 태워버리는 지방 소멸 작전!', duration: '30-40분', frequency: '주 3-4회' }
+                        );
+                    } else {
+                        recommendations.exercises.push(
+                            { name: '유산소 운동 🏃', desc: '천천히 확실하게! 꾸준함이 답이에요', duration: '40-50분', frequency: '주 4-5회' }
+                        );
+                    }
                     recommendations.exercises.push(
-                        { name: '수영', desc: '관절에 부담 없는 전신 운동', duration: '30-50분', frequency: '주 2-3회' },
-                        { name: '수중 운동', desc: '물의 부력을 이용한 저충격 운동', duration: '50분', frequency: '주 2회' }
+                        { name: '에어로빅 💃', desc: '신나는 음악에 맞춰 칼로리 바이바이~', duration: '50분', frequency: '주 3-4회' }
                     );
                 }
 
-                // 선호도와 시설에 따른 프로그램 추천
+                if (goals.includes('muscle')) {
+                    if (fitnessLevel === 'low' || fitnessLevel === 'medium_low') {
+                        recommendations.exercises.push(
+                            { name: '기초 근력 운동 💪', desc: '안전하게 시작하는 근육 키우기 첫걸음', duration: '40-50분', frequency: '주 3회' }
+                        );
+                    } else {
+                        recommendations.exercises.push(
+                            { name: '웨이트 트레이닝 🏋️', desc: '본격 몸짱 만들기! 내 근육아 자라라~', duration: '60-70분', frequency: '주 4-5회' }
+                        );
+                    }
+                }
+
+                if (goals.includes('health')) {
+                    recommendations.exercises.push(
+                        { name: '걷기/파워워킹 🚶', desc: '가볍지만 확실한 건강 지킴이', duration: '30-40분', frequency: '주 5회' },
+                        { name: '프롭 테라피 🪵', desc: '나무토막의 마법! 몸이 가벼워져요', duration: '50분', frequency: '주 2-3회' }
+                    );
+                }
+
+                if (goals.includes('flexibility')) {
+                    recommendations.exercises.push(
+                        { name: '요가 🧘', desc: '휘어지는 내 몸... 이제는 유연해질 때!', duration: '60분', frequency: '주 3-4회' },
+                        { name: '필라테스 🤸', desc: '코어에 집중! 자세 교정의 왕', duration: '50분', frequency: '주 3회' }
+                    );
+                }
+
+                if (goals.includes('rehabilitation')) {
+                    recommendations.exercises.push(
+                        { name: '재활 운동 🩹', desc: '천천히, 안전하게 회복하는 시간', duration: '40분', frequency: '주 3회' },
+                        { name: '수중 재활 🏊', desc: '물속에서 부담 없이 치료받기', duration: '40분', frequency: '주 2-3회' }
+                    );
+                }
+
+                if (goals.includes('stress')) {
+                    recommendations.exercises.push(
+                        { name: '요가/명상 🧘‍♀️', desc: '마음의 평화... 스트레스 날려요!', duration: '50분', frequency: '주 3회' },
+                        { name: '수영 🏊‍♂️', desc: '물과 함께 스트레스도 떠내려 보내요', duration: '40분', frequency: '주 2-3회' }
+                    );
+                }
+
+                // 건강 상태 고려
+                if (healthIssues.includes('joint') || healthIssues.includes('back') || healthIssues.includes('obesity')) {
+                    recommendations.exercises.push(
+                        { name: '수영 🏊', desc: '관절도 편하고 운동 효과는 두 배!', duration: '30-50분', frequency: '주 3회' },
+                        { name: '수중 운동 💧', desc: '물의 마법! 무릎이 안 아파요', duration: '50분', frequency: '주 2-3회' }
+                    );
+                }
+
+                // 선호도별 프로그램 추천
+                if (answers.preference === 'water') {
+                    recommendations.programs.push(
+                        { name: '수영 강습 (초급)', facility: '평생학습관수영장', time: '월~금 10:00-11:00', level: '초급', fee: '월 60,000원' },
+                        { name: '수영 강습 (중급)', facility: '의왕국민체육센터', time: '월~금 14:00-15:00', level: '중급', fee: '월 60,000원' },
+                        { name: '수영 강습 (고급)', facility: '포일스포츠센터', time: '월~금 19:00-20:00', level: '고급', fee: '월 60,000원' }
+                    );
+                }
+
+                if (answers.preference === 'gym') {
+                    recommendations.programs.push(
+                        { name: '헬스 회원 (자유이용)', facility: '의왕국민체육센터', time: '06:00-22:00', level: '전체', fee: '월 40,000원' },
+                        { name: '헬스 회원 (자유이용)', facility: '포일스포츠센터', time: '06:00-22:00', level: '전체', fee: '월 40,000원' }
+                    );
+                    if (fitnessLevel === 'low' || fitnessLevel === 'medium_low') {
+                        recommendations.programs.push(
+                            { name: '초보자 헬스 교실', facility: '의왕국민체육센터', time: '화/목 11:00-12:00', level: '초급', fee: '월 50,000원' }
+                        );
+                    }
+                }
+
                 if (answers.preference === 'group') {
                     recommendations.programs.push(
-                        { name: '에어로빅', facility: '의왕국민체육센터', time: '월~금 (시간별 선택 가능)', level: '초급-중급', fee: '월 50,000원' },
+                        { name: '에어로빅', facility: '의왕국민체육센터', time: '월/수/금 10:00-11:00', level: '초급-중급', fee: '월 50,000원' },
                         { name: '스포츠댄스', facility: '포일스포츠센터', time: '화/목/토 19:00-20:00', level: '전체', fee: '월 55,000원' }
                     );
                 }
 
-                if (answers.preference === 'water') {
+                if (answers.preference === 'court') {
                     recommendations.programs.push(
-                        { name: '수영 강습 (초급)', facility: '평생학습관수영장', time: '월~금 (시간대별)', level: '초급', fee: '월 60,000원' },
-                        { name: '수영 강습 (중급)', facility: '의왕국민체육센터', time: '월~금 (시간대별)', level: '중급', fee: '월 60,000원' },
-                        { name: '수영 강습 (고급)', facility: '포일스포츠센터', time: '월~금 (시간대별)', level: '고급', fee: '월 60,000원' }
+                        { name: '배드민턴 (자유이용)', facility: '부곡스포츠센터', time: '06:00-22:00', level: '전체', fee: '회당 5,000원' },
+                        { name: '농구 (자유이용)', facility: '포일스포츠센터', time: '06:00-22:00', level: '전체', fee: '회당 5,000원' }
                     );
                 }
 
-                if (answers.preference === 'indoor') {
+                if (answers.preference === 'mind_body') {
                     recommendations.programs.push(
-                        { name: '헬스 회원', facility: '의왕국민체육센터', time: '06:00-22:00 (자유이용)', level: '전체', fee: '월 40,000원' },
-                        { name: '배드민턴', facility: '부곡스포츠센터', time: '일일이용 또는 정기권', level: '전체', fee: '회당 5,000원' },
-                        { name: '농구', facility: '포일스포츠센터', time: '일일이용 또는 정기권', level: '전체', fee: '회당 5,000원' }
+                        { name: '요가', facility: '백운커뮤니티센터', time: '월/수/금 10:00-11:00', level: '전체', fee: '월 50,000원' },
+                        { name: '필라테스', facility: '의왕국민체육센터', time: '화/목 19:00-20:00', level: '중급', fee: '월 55,000원' },
+                        { name: '프롭 테라피', facility: '포일스포츠센터', time: '월/수 14:00-15:00', level: '초급-중급', fee: '월 50,000원' }
                     );
                 }
 
-                // 일반 프로그램 추가
-                recommendations.programs.push(
-                    { name: '요가', facility: '백운커뮤니티센터', time: '월/수/금 10:00-11:00', level: '전체', fee: '월 50,000원' },
-                    { name: '필라테스', facility: '의왕국민체육센터', time: '화/목 19:00-20:00', level: '중급', fee: '월 55,000원' },
-                    { name: '프롭 테라피', facility: '포일스포츠센터', time: '월/수 14:00-15:00', level: '초급-중급', fee: '월 50,000원' }
-                );
-
-                if (answers.age === '60plus' || answers.goal === 'rehabilitation') {
+                // 시간대별 추가 추천
+                if (exerciseTime.includes('early')) {
                     recommendations.programs.push(
-                        { name: '시니어 건강 교실', facility: '백운커뮤니티센터', time: '월~금 10:00-11:00', level: '시니어', fee: '월 40,000원' }
+                        { name: '아침 수영', facility: '의왕국민체육센터', time: '월~금 06:30-07:30', level: '전체', fee: '월 55,000원' }
                     );
                 }
 
-                if (answers.experience === 'beginner' || answers.goal === 'rehabilitation') {
+                // 연령대별 특화 프로그램
+                if (answers.age === '60plus') {
                     recommendations.programs.push(
-                        { name: '검도 (초급)', facility: '포일스포츠센터', time: '화/목 18:00-19:00', level: '초급', fee: '월 50,000원' }
+                        { name: '시니어 건강 교실', facility: '백운커뮤니티센터', time: '월~금 10:00-11:00', level: '시니어', fee: '월 40,000원' },
+                        { name: '실버 수영', facility: '평생학습관수영장', time: '화/목 11:00-12:00', level: '시니어', fee: '월 50,000원' }
                     );
                 }
 
-                // 이용 가능한 시설 정보
+                // 동반자별 추천
+                if (answers.companion === 'child') {
+                    recommendations.programs.push(
+                        { name: '가족 수영 교실', facility: '포일스포츠센터', time: '토/일 10:00-11:00', level: '가족', fee: '월 70,000원' }
+                    );
+                }
+
+                // 초보자용 추천
+                if (fitnessLevel === 'low' || fitnessLevel === 'medium_low') {
+                    recommendations.programs.push(
+                        { name: '기초 체력 단련반', facility: '백운커뮤니티센터', time: '월/수/금 11:00-12:00', level: '초급', fee: '월 45,000원' }
+                    );
+                }
+
+                // 시설 정보
                 recommendations.facilities = [
-                    { name: '의왕국민체육센터', address: '경기도 의왕시 내손동', facilities: '수영장(6레인), 헬스장, 다목적체육관' },
-                    { name: '포일스포츠센터', address: '경기도 의왕시 포일동', facilities: '수영장, 헬스장, GX룸, 다목적체육관' },
-                    { name: '부곡스포츠센터', address: '경기도 의왕시 부곡동', facilities: '체육관, 헬스장' },
-                    { name: '백운커뮤니티센터', address: '경기도 의왕시 백운호수', facilities: '다목적실, 강의실' },
-                    { name: '평생학습관수영장', address: '경기도 의왕시', facilities: '수영장' }
+                    { name: '의왕국민체육센터', address: '경기도 의왕시 내손동', facilities: '수영장(6레인), 헬스장, 다목적체육관', time: '06:00-22:00' },
+                    { name: '포일스포츠센터', address: '경기도 의왕시 포일동', facilities: '수영장, 헬스장, GX룸, 다목적체육관', time: '06:00-22:00' },
+                    { name: '부곡스포츠센터', address: '경기도 의왕시 부곡동', facilities: '체육관, 헬스장, 배드민턴장', time: '06:00-22:00' },
+                    { name: '백운커뮤니티센터', address: '경기도 의왕시 백운호수', facilities: '다목적실, 강의실, GX룸', time: '09:00-21:00' },
+                    { name: '평생학습관수영장', address: '경기도 의왕시', facilities: '수영장(6레인)', time: '06:00-21:00' }
                 ];
+
+                // 중복 제거
+                recommendations.exercises = [...new Map(recommendations.exercises.map(item => [item.name, item])).values()];
+                recommendations.programs = [...new Map(recommendations.programs.map(item => [item.name + item.facility, item])).values()];
 
                 return recommendations;
             };
@@ -296,15 +407,16 @@
                                     <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                                         <Award className="w-8 h-8 text-green-600" />
                                     </div>
-                                    <h2 className="text-3xl font-bold text-gray-800 mb-2">맞춤 운동 프로그램 추천</h2>
-                                    <p className="text-gray-600">회원님을 위한 최적의 운동과 의왕도시공사 프로그램을 추천해드립니다</p>
+                                    <h2 className="text-3xl font-bold text-gray-800 mb-2">🎉 짜잔! 딱 맞는 운동을 찾았어요!</h2>
+                                    <p className="text-gray-600">회원님을 위해 특별히 준비한 맞춤 프로그램이에요 💝</p>
+                                    <p className="text-sm text-blue-600 font-semibold mt-2">✨ 지금 바로 시작해볼까요? ✨</p>
                                 </div>
 
                                 {/* 추천 운동 */}
                                 <div className="mb-8">
                                     <div className="flex items-center mb-4">
                                         <Activity className="w-6 h-6 text-blue-600 mr-2" />
-                                        <h3 className="text-2xl font-bold text-gray-800">추천 운동</h3>
+                                        <h3 className="text-2xl font-bold text-gray-800">💪 이런 운동 어때요?</h3>
                                     </div>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         {result.exercises.map((exercise, index) => (
@@ -330,7 +442,7 @@
                                 <div className="mb-8">
                                     <div className="flex items-center mb-4">
                                         <Users className="w-6 h-6 text-purple-600 mr-2" />
-                                        <h3 className="text-2xl font-bold text-gray-800">의왕도시공사 운영 프로그램</h3>
+                                        <h3 className="text-2xl font-bold text-gray-800">🎯 딱! 맞는 프로그램</h3>
                                     </div>
                                     <div className="space-y-3">
                                         {result.programs.map((program, index) => (
@@ -355,12 +467,12 @@
                                                         </div>
                                                     </div>
                                                     <a
-                                                        href="https://www.uuc.or.kr"
+                                                        href="https://reserve.uuc.or.kr/fmcs/3"
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="ml-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold whitespace-nowrap inline-block"
                                                     >
-                                                        신청하기
+                                                        ✨ 신청하기
                                                     </a>
                                                 </div>
                                             </div>
@@ -372,16 +484,22 @@
                                 <div className="mb-8">
                                     <div className="flex items-center mb-4">
                                         <Activity className="w-6 h-6 text-indigo-600 mr-2" />
-                                        <h3 className="text-2xl font-bold text-gray-800">이용 가능 시설</h3>
+                                        <h3 className="text-2xl font-bold text-gray-800">🏢 어디서 운동할까요?</h3>
                                     </div>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         {result.facilities.map((facility, index) => (
                                             <div key={index} className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-5 border-2 border-indigo-200">
                                                 <h4 className="text-lg font-bold text-gray-800 mb-2">{facility.name}</h4>
-                                                <p className="text-sm text-gray-600 mb-2">{facility.address}</p>
-                                                <div className="flex items-start">
-                                                    <Target className="w-4 h-4 text-indigo-600 mr-2 mt-1 flex-shrink-0" />
-                                                    <p className="text-sm text-gray-700">{facility.facilities}</p>
+                                                <p className="text-sm text-gray-600 mb-3">{facility.address}</p>
+                                                <div className="space-y-2">
+                                                    <div className="flex items-start">
+                                                        <Target className="w-4 h-4 text-indigo-600 mr-2 mt-1 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-700">{facility.facilities}</p>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <Calendar className="w-4 h-4 text-indigo-600 mr-2 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-700">운영시간: {facility.time}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))}
@@ -393,15 +511,14 @@
                                     <div className="flex items-start">
                                         <Heart className="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
                                         <div>
-                                            <h4 className="font-bold text-gray-800 mb-2">프로그램 이용 안내</h4>
+                                            <h4 className="font-bold text-gray-800 mb-2">📢 잠깐! 신청하기 전에 체크!</h4>
                                             <ul className="text-sm text-gray-700 space-y-1">
-                                                <li>• 모든 강좌는 <strong>의왕도시공사 홈페이지(www.uuc.or.kr)</strong>에서 회원가입 후 신청 가능합니다</li>
-                                                <li>• 매월 1일부터 말일까지 월 단위 강습제로 운영됩니다</li>
-                                                <li>• 의왕시민은 3개월 등록 시 10% 할인 혜택이 있습니다</li>
-                                                <li>• 타 지역 거주자는 요금 30% 할증이 적용됩니다</li>
-                                                <li>• 운동 시작 전 가벼운 준비운동을 반드시 실시하세요</li>
-                                                <li>• 통증이 느껴지면 즉시 운동을 중단하고 전문가와 상담하세요</li>
-                                                <li>• 자세한 접수 일정 및 시간표는 홈페이지를 확인해주세요</li>
+                                                <li>• 🌐 <strong>reserve.uuc.or.kr/fmcs/3</strong>에서 모든 프로그램 신청 가능! (간편해요)</li>
+                                                <li>• 📅 매월 1일부터 말일까지 한 달 단위로 운영돼요</li>
+                                                <li>• 💰 의왕시민이라면? 3개월 등록 시 <strong>10% 할인</strong> 득템!</li>
+                                                <li>• 🏃 운동 전 준비운동은 필수! (다치면 안 돼요)</li>
+                                                <li>• 😣 통증이 느껴지면 무리하지 말고 쉬어가세요~</li>
+                                                <li>• 💪 꾸준함이 답! 함께 건강해져요!</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -413,7 +530,7 @@
                                         onClick={handleReset}
                                         className="flex-1 px-6 py-4 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors font-semibold text-lg"
                                     >
-                                        다시 검사하기
+                                        🔄 다시 해볼래요!
                                     </button>
                                     <a
                                         href="https://www.uuc.or.kr"
@@ -421,7 +538,7 @@
                                         rel="noopener noreferrer"
                                         className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-colors font-semibold text-lg text-center"
                                     >
-                                        의왕도시공사 홈페이지로 이동
+                                        🏢 의왕도시공사 홈페이지 가기
                                     </a>
                                 </div>
                             </div>
@@ -440,14 +557,17 @@
                             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
                                 <Activity className="w-8 h-8 text-white" />
                             </div>
-                            <h1 className="text-4xl font-bold text-gray-800 mb-2">의왕도시공사 맞춤 운동 추천</h1>
-                            <p className="text-gray-600 text-lg">회원님에게 맞는 최적의 운동을 찾아드립니다</p>
+                            <h1 className="text-4xl font-bold text-gray-800 mb-2">💪 나에게 딱 맞는 운동 찾기!</h1>
+                            <p className="text-gray-600 text-lg">9개 질문으로 알아보는 맞춤 운동 추천 🎯</p>
+                            <p className="text-sm text-gray-500 mt-2">의왕도시공사가 여러분의 건강을 응원합니다! 🎉</p>
                         </div>
 
                         {/* 진행률 */}
                         <div className="mb-8">
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm font-semibold text-gray-600">진행률</span>
+                                <span className="text-sm font-semibold text-gray-600">
+                                    {currentStep < 3 ? '🚀 좋아요! 계속 가볼까요?' : currentStep < 6 ? '💪 절반 넘었어요!' : '🎉 거의 다 왔어요!'}
+                                </span>
                                 <span className="text-sm font-semibold text-blue-600">{currentStep + 1} / {questions.length}</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-3">
@@ -471,7 +591,7 @@
                                     return (
                                         <button
                                             key={option.value}
-                                            onClick={() => handleAnswer(currentQuestion.id, option.value, currentQuestion.type === 'multiple')}
+                                            onClick={() => handleAnswer(currentQuestion.id, option.value, currentQuestion.type === 'multiple', currentQuestion.maxSelect)}
                                             className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
                                                 isSelected
                                                     ? 'border-blue-600 bg-blue-50 shadow-md'
@@ -498,7 +618,9 @@
                             </div>
 
                             {currentQuestion.type === 'multiple' && (
-                                <p className="text-sm text-gray-500 mt-4">* 해당되는 항목을 모두 선택해주세요</p>
+                                <p className="text-sm text-gray-500 mt-4">
+                                    * {currentQuestion.maxSelect ? `최대 ${currentQuestion.maxSelect}개까지 선택 가능합니다` : '해당되는 항목을 모두 선택해주세요'}
+                                </p>
                             )}
                         </div>
 
@@ -509,7 +631,7 @@
                                     onClick={() => setCurrentStep(currentStep - 1)}
                                     className="px-6 py-4 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold"
                                 >
-                                    이전
+                                    ⬅️ 이전
                                 </button>
                             )}
                             <button
@@ -521,7 +643,7 @@
                                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 }`}
                             >
-                                {currentStep === questions.length - 1 ? '결과 보기' : '다음'}
+                                {currentStep === questions.length - 1 ? '🎁 결과 확인!' : '다음 ➡️'}
                                 <ChevronRight className="w-5 h-5 ml-2" />
                             </button>
                         </div>
