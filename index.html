@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>의왕도시공사 맞춤 운동 추천</title>
+    <title>의왕도시공사 맞춤 운동 추천 시스템</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,14 +14,35 @@
     
     <!-- Babel Standalone for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- html2pdf for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .uuc-gradient {
+            background: linear-gradient(135deg, #FF8C42 0%, #8BC34A 50%, #1976D2 100%);
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useRef } = React;
         
-        // Lucide Icons as SVG components
+        // Icon Components
         const ChevronRight = ({ className }) => (
             <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -48,12 +69,6 @@
             </svg>
         );
 
-        const Users = ({ className }) => (
-            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-        );
-
         const Calendar = ({ className }) => (
             <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -67,119 +82,145 @@
             </svg>
         );
 
+        const Download = ({ className }) => (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+        );
+
+        const Phone = ({ className }) => (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+        );
+
+        const MapPin = ({ className }) => (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        );
+
+        const Share = ({ className }) => (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+        );
+
         const FitnessRecommendationApp = () => {
             const [currentStep, setCurrentStep] = useState(0);
             const [answers, setAnswers] = useState({});
             const [result, setResult] = useState(null);
+            const resultRef = useRef(null);
 
             const questions = [
                 {
                     id: 'age',
-                    question: '🎂 몇 살이세요? (나이는 숫자일 뿐!)',
+                    question: '연령대를 선택해주세요',
                     type: 'single',
                     options: [
-                        { value: '20s', label: '20대 - 아직 젊다! 🔥' },
-                        { value: '30s', label: '30대 - 인생의 전성기 💪' },
-                        { value: '40s', label: '40대 - 경험과 체력의 황금비율 ⭐' },
-                        { value: '50s', label: '50대 - 건강이 재산! 💎' },
-                        { value: '60plus', label: '60대 이상 - 나이는 진짜 숫자일 뿐 😎' }
+                        { value: '20s', label: '20대' },
+                        { value: '30s', label: '30대' },
+                        { value: '40s', label: '40대' },
+                        { value: '50s', label: '50대' },
+                        { value: '60plus', label: '60대 이상' }
                     ]
                 },
                 {
                     id: 'fitness_level',
-                    question: '💪 솔직히... 현재 체력은 어때요?',
+                    question: '현재 체력 수준을 선택해주세요',
                     type: 'single',
                     options: [
-                        { value: 'low', label: '계단만 올라도 숨참... 🥵 (운동이 절실!)' },
-                        { value: 'medium_low', label: '일상생활은 가능! 근데 운동은... 😅' },
-                        { value: 'medium', label: '평범해요~ 가끔 운동도 하고 🙂' },
-                        { value: 'medium_high', label: '꽤 괜찮아요! 운동 좀 해왔어요 💪' },
-                        { value: 'high', label: '제 체력 믿으세요! 고강도도 OK 🔥' }
+                        { value: 'low', label: '낮음 - 운동이 많이 필요합니다' },
+                        { value: 'medium_low', label: '보통 이하 - 가벼운 운동부터 시작하면 좋습니다' },
+                        { value: 'medium', label: '보통 - 일상 생활에 지장이 없습니다' },
+                        { value: 'medium_high', label: '보통 이상 - 규칙적으로 운동하고 있습니다' },
+                        { value: 'high', label: '높음 - 고강도 운동도 가능합니다' }
                     ]
                 },
                 {
                     id: 'goal',
-                    question: '🎯 운동으로 이루고 싶은 것은? (최대 2개만!)',
+                    question: '운동 목표를 선택해주세요 (최대 2개)',
                     type: 'multiple',
                     maxSelect: 2,
                     options: [
-                        { value: 'weight', label: '🔥 살 빼기 프로젝트! (여름이 다가온다...)' },
-                        { value: 'muscle', label: '💪 근육 키우기 (팔뚝 좀 봐봐!)' },
-                        { value: 'health', label: '🏥 건강 챙기기 (병원은 이제 그만...)' },
-                        { value: 'flexibility', label: '🧘 유연해지기 (발 닿았으면...)' },
-                        { value: 'rehabilitation', label: '🩹 재활/회복 (아픈 곳을 고치자)' },
-                        { value: 'stress', label: '😌 스트레스 날려버리기 (힐링 필수!)' }
+                        { value: 'weight', label: '체중 감량' },
+                        { value: 'muscle', label: '근력 증진' },
+                        { value: 'health', label: '건강 증진' },
+                        { value: 'flexibility', label: '유연성 향상' },
+                        { value: 'rehabilitation', label: '재활 및 회복' },
+                        { value: 'stress', label: '스트레스 해소' }
                     ]
                 },
                 {
                     id: 'health',
-                    question: '🏥 혹시 조심해야 할 부분이 있나요?',
+                    question: '건강 상태를 선택해주세요 (해당사항 모두 선택)',
                     type: 'multiple',
                     options: [
-                        { value: 'normal', label: '✨ 완전 건강체! 문제없어요' },
-                        { value: 'joint', label: '🦴 관절이 좀... (무릎, 어깨가 시위 중)' },
-                        { value: 'back', label: '😫 허리가 좀... (앉아있기 힘들어요)' },
-                        { value: 'cardio', label: '❤️ 심장/혈압 주의 (의사가 운동하래요)' },
-                        { value: 'diabetes', label: '🩸 당뇨 관리 중 (혈당 체크 필수)' },
-                        { value: 'obesity', label: '⚖️ 고도비만 (이것도 고민이에요)' },
-                        { value: 'respiratory', label: '🫁 호흡기 약함 (천식이 있어요)' }
+                        { value: 'normal', label: '특이사항 없음' },
+                        { value: 'joint', label: '관절 질환 (무릎, 어깨 등)' },
+                        { value: 'back', label: '허리 질환' },
+                        { value: 'cardio', label: '심혈관 질환 (고혈압 등)' },
+                        { value: 'diabetes', label: '당뇨' },
+                        { value: 'obesity', label: '고도비만' },
+                        { value: 'respiratory', label: '호흡기 질환' }
                     ]
                 },
                 {
                     id: 'preference',
-                    question: '🤔 어떤 운동이 끌리세요?',
+                    question: '선호하는 운동 유형을 선택해주세요',
                     type: 'single',
                     options: [
-                        { value: 'water', label: '🏊 수영장 좋아요! (물에서 놀기 최고)' },
-                        { value: 'gym', label: '🏋️ 헬스장 러버! (기구가 나를 부른다)' },
-                        { value: 'group', label: '👯 함께하는 수업! (혼자는 외로워)' },
-                        { value: 'court', label: '🏐 체육관에서 뛰기! (공 다루는 재미)' },
-                        { value: 'mind_body', label: '🧘 요가/필라테스 (몸과 마음의 평화)' }
+                        { value: 'water', label: '수영 및 수중 운동' },
+                        { value: 'gym', label: '헬스 및 웨이트 트레이닝' },
+                        { value: 'group', label: '그룹 수업 (에어로빅, 댄스 등)' },
+                        { value: 'court', label: '구기 종목 (배드민턴, 농구 등)' },
+                        { value: 'mind_body', label: '요가 및 필라테스' }
                     ]
                 },
                 {
                     id: 'exercise_time',
-                    question: '⏰ 언제 운동하실 건가요? (중복 선택 OK!)',
+                    question: '운동 가능한 시간대를 선택해주세요 (중복 선택 가능)',
                     type: 'multiple',
                     options: [
-                        { value: 'early', label: '🌅 새벽/오전 (일찍 일어나는 새가 건강해!)' },
-                        { value: 'afternoon', label: '☀️ 오후 (점심 먹고 소화운동?)' },
-                        { value: 'evening', label: '🌆 퇴근 후 저녁 (회사 스트레스 날리기)' },
-                        { value: 'weekend', label: '🎉 주말만! (평일은 못 일어남)' }
+                        { value: 'early', label: '새벽/오전 (06:00-12:00)' },
+                        { value: 'afternoon', label: '오후 (12:00-18:00)' },
+                        { value: 'evening', label: '저녁 (18:00-22:00)' },
+                        { value: 'weekend', label: '주말' }
                     ]
                 },
                 {
                     id: 'frequency',
-                    question: '📅 일주일에 몇 번이나 올 수 있어요?',
+                    question: '주 운동 횟수를 선택해주세요',
                     type: 'single',
                     options: [
-                        { value: '1-2', label: '주 1-2회 - 천천히 시작해볼게요 😊' },
-                        { value: '3-4', label: '주 3-4회 - 진지하게 해보려고요! 💪' },
-                        { value: '5plus', label: '주 5회 이상 - 완전 작심하고 왔어요 🔥' },
-                        { value: 'daily', label: '매일 - 운동이 제 일상입니다 😎' }
+                        { value: '1-2', label: '주 1-2회' },
+                        { value: '3-4', label: '주 3-4회' },
+                        { value: '5plus', label: '주 5회 이상' },
+                        { value: 'daily', label: '매일' }
                     ]
                 },
                 {
                     id: 'intensity',
-                    question: '🔋 얼마나 빡세게 하고 싶으세요?',
+                    question: '선호하는 운동 강도를 선택해주세요',
                     type: 'single',
                     options: [
-                        { value: 'light', label: '🍃 가볍게~ (땀 안 나도 됨)' },
-                        { value: 'moderate', label: '😊 적당히! (약간 숨차는 정도)' },
-                        { value: 'high', label: '🔥 빡세게! (땀 뻘뻘 흘려야 운동한 느낌)' },
-                        { value: 'mixed', label: '🎭 그날그날 달라요 (기분따라~)' }
+                        { value: 'light', label: '가벼운 운동' },
+                        { value: 'moderate', label: '중간 강도' },
+                        { value: 'high', label: '고강도' },
+                        { value: 'mixed', label: '상황에 따라 다름' }
                     ]
                 },
                 {
                     id: 'companion',
-                    question: '👥 누구랑 운동하실 건가요?',
+                    question: '함께 운동할 동반자를 선택해주세요',
                     type: 'single',
                     options: [
-                        { value: 'alone', label: '😌 나 혼자! (집중할 수 있어서 좋아요)' },
-                        { value: 'friend', label: '👫 친구랑! (수다 떨면서 운동)' },
-                        { value: 'family', label: '👨‍👩‍👧 배우자/가족과! (가족 건강이 최고)' },
-                        { value: 'child', label: '👶 아이와 함께! (같이 놀면서 운동)' },
-                        { value: 'group', label: '🎉 새로운 사람들 만나고 싶어요! (운동 친구 모집)' }
+                        { value: 'alone', label: '혼자' },
+                        { value: 'friend', label: '친구와 함께' },
+                        { value: 'family', label: '배우자/가족과 함께' },
+                        { value: 'child', label: '자녀와 함께' },
+                        { value: 'group', label: '새로운 사람들과 함께' }
                     ]
                 }
             ];
@@ -193,9 +234,8 @@
                             [questionId]: currentAnswers.filter(v => v !== value)
                         });
                     } else {
-                        // maxSelect 체크
                         if (maxSelect && currentAnswers.length >= maxSelect) {
-                            return; // 최대 선택 개수 초과 시 무시
+                            return;
                         }
                         setAnswers({
                             ...answers,
@@ -227,145 +267,184 @@
                 if (goals.includes('weight')) {
                     if (intensity === 'high' && fitnessLevel === 'high') {
                         recommendations.exercises.push(
-                            { name: '고강도 인터벌 트레이닝 🔥', desc: '빠르게 태워버리는 지방 소멸 작전!', duration: '30-40분', frequency: '주 3-4회' }
+                            { name: '고강도 인터벌 트레이닝', desc: '짧은 시간에 높은 칼로리 소모 효과', duration: '30-40분', frequency: '주 3-4회', calories: '400-600 kcal' }
                         );
                     } else {
                         recommendations.exercises.push(
-                            { name: '유산소 운동 🏃', desc: '천천히 확실하게! 꾸준함이 답이에요', duration: '40-50분', frequency: '주 4-5회' }
+                            { name: '유산소 운동', desc: '안전하고 효과적인 체중 감량 운동', duration: '40-50분', frequency: '주 4-5회', calories: '300-500 kcal' }
                         );
                     }
                     recommendations.exercises.push(
-                        { name: '에어로빅 💃', desc: '신나는 음악에 맞춰 칼로리 바이바이~', duration: '50분', frequency: '주 3-4회' }
+                        { name: '에어로빅', desc: '음악에 맞춰 즐겁게 칼로리 소모', duration: '50분', frequency: '주 3-4회', calories: '350-450 kcal' }
                     );
                 }
 
                 if (goals.includes('muscle')) {
                     if (fitnessLevel === 'low' || fitnessLevel === 'medium_low') {
                         recommendations.exercises.push(
-                            { name: '기초 근력 운동 💪', desc: '안전하게 시작하는 근육 키우기 첫걸음', duration: '40-50분', frequency: '주 3회' }
+                            { name: '기초 근력 운동', desc: '안전하게 근육을 만드는 첫걸음', duration: '40-50분', frequency: '주 3회', calories: '200-300 kcal' }
                         );
                     } else {
                         recommendations.exercises.push(
-                            { name: '웨이트 트레이닝 🏋️', desc: '본격 몸짱 만들기! 내 근육아 자라라~', duration: '60-70분', frequency: '주 4-5회' }
+                            { name: '웨이트 트레이닝', desc: '체계적인 근력 증진 프로그램', duration: '60-70분', frequency: '주 4-5회', calories: '250-400 kcal' }
                         );
                     }
                 }
 
                 if (goals.includes('health')) {
                     recommendations.exercises.push(
-                        { name: '걷기/파워워킹 🚶', desc: '가볍지만 확실한 건강 지킴이', duration: '30-40분', frequency: '주 5회' },
-                        { name: '프롭 테라피 🪵', desc: '나무토막의 마법! 몸이 가벼워져요', duration: '50분', frequency: '주 2-3회' }
+                        { name: '걷기/파워워킹', desc: '누구나 쉽게 시작하는 건강 운동', duration: '30-40분', frequency: '주 5회', calories: '150-250 kcal' },
+                        { name: '프롭 테라피', desc: '도구를 활용한 재활 및 건강 증진', duration: '50분', frequency: '주 2-3회', calories: '200-300 kcal' }
                     );
                 }
 
                 if (goals.includes('flexibility')) {
                     recommendations.exercises.push(
-                        { name: '요가 🧘', desc: '휘어지는 내 몸... 이제는 유연해질 때!', duration: '60분', frequency: '주 3-4회' },
-                        { name: '필라테스 🤸', desc: '코어에 집중! 자세 교정의 왕', duration: '50분', frequency: '주 3회' }
+                        { name: '요가', desc: '몸과 마음의 유연성을 높이는 운동', duration: '60분', frequency: '주 3-4회', calories: '150-250 kcal' },
+                        { name: '필라테스', desc: '코어 강화 및 자세 교정', duration: '50분', frequency: '주 3회', calories: '200-300 kcal' }
                     );
                 }
 
                 if (goals.includes('rehabilitation')) {
                     recommendations.exercises.push(
-                        { name: '재활 운동 🩹', desc: '천천히, 안전하게 회복하는 시간', duration: '40분', frequency: '주 3회' },
-                        { name: '수중 재활 🏊', desc: '물속에서 부담 없이 치료받기', duration: '40분', frequency: '주 2-3회' }
+                        { name: '재활 운동', desc: '전문가 지도 하의 안전한 회복 운동', duration: '40분', frequency: '주 3회', calories: '150-250 kcal' },
+                        { name: '수중 재활', desc: '관절 부담을 줄인 수중 치료', duration: '40분', frequency: '주 2-3회', calories: '200-300 kcal' }
                     );
                 }
 
                 if (goals.includes('stress')) {
                     recommendations.exercises.push(
-                        { name: '요가/명상 🧘‍♀️', desc: '마음의 평화... 스트레스 날려요!', duration: '50분', frequency: '주 3회' },
-                        { name: '수영 🏊‍♂️', desc: '물과 함께 스트레스도 떠내려 보내요', duration: '40분', frequency: '주 2-3회' }
+                        { name: '요가/명상', desc: '스트레스 해소와 마음의 평화', duration: '50분', frequency: '주 3회', calories: '100-200 kcal' },
+                        { name: '수영', desc: '물에서 느끼는 편안함과 상쾌함', duration: '40분', frequency: '주 2-3회', calories: '300-500 kcal' }
                     );
                 }
 
                 // 건강 상태 고려
                 if (healthIssues.includes('joint') || healthIssues.includes('back') || healthIssues.includes('obesity')) {
                     recommendations.exercises.push(
-                        { name: '수영 🏊', desc: '관절도 편하고 운동 효과는 두 배!', duration: '30-50분', frequency: '주 3회' },
-                        { name: '수중 운동 💧', desc: '물의 마법! 무릎이 안 아파요', duration: '50분', frequency: '주 2-3회' }
+                        { name: '수영', desc: '관절에 무리 없는 전신 운동', duration: '30-50분', frequency: '주 3회', calories: '300-500 kcal' },
+                        { name: '수중 운동', desc: '물의 부력을 이용한 안전한 운동', duration: '50분', frequency: '주 2-3회', calories: '250-400 kcal' }
                     );
                 }
 
                 // 선호도별 프로그램 추천
                 if (answers.preference === 'water') {
                     recommendations.programs.push(
-                        { name: '수영 강습 (초급)', facility: '평생학습관수영장', time: '월~금 10:00-11:00', level: '초급', fee: '월 60,000원' },
-                        { name: '수영 강습 (중급)', facility: '의왕국민체육센터', time: '월~금 14:00-15:00', level: '중급', fee: '월 60,000원' },
-                        { name: '수영 강습 (고급)', facility: '포일스포츠센터', time: '월~금 19:00-20:00', level: '고급', fee: '월 60,000원' }
+                        { name: '수영 강습 (초급)', facility: '평생학습관수영장', time: '월~금 10:00-11:00', level: '초급', fee: '월 60,000원', contact: '031-8086-7300' },
+                        { name: '수영 강습 (중급)', facility: '의왕국민체육센터', time: '월~금 14:00-15:00', level: '중급', fee: '월 60,000원', contact: '031-8086-7200' },
+                        { name: '수영 강습 (고급)', facility: '포일스포츠센터', time: '월~금 19:00-20:00', level: '고급', fee: '월 60,000원', contact: '031-8086-7100' },
+                        { name: '수중 에어로빅', facility: '의왕국민체육센터', time: '화/목 11:00-12:00', level: '초중급', fee: '월 55,000원', contact: '031-8086-7200' }
                     );
                 }
 
                 if (answers.preference === 'gym') {
                     recommendations.programs.push(
-                        { name: '헬스 회원 (자유이용)', facility: '의왕국민체육센터', time: '06:00-22:00', level: '전체', fee: '월 40,000원' },
-                        { name: '헬스 회원 (자유이용)', facility: '포일스포츠센터', time: '06:00-22:00', level: '전체', fee: '월 40,000원' }
+                        { name: '헬스 회원 (자유이용)', facility: '의왕국민체육센터', time: '06:00-22:00', level: '전체', fee: '월 40,000원', contact: '031-8086-7200' },
+                        { name: '헬스 회원 (자유이용)', facility: '포일스포츠센터', time: '06:00-22:00', level: '전체', fee: '월 40,000원', contact: '031-8086-7100' }
                     );
                     if (fitnessLevel === 'low' || fitnessLevel === 'medium_low') {
                         recommendations.programs.push(
-                            { name: '초보자 헬스 교실', facility: '의왕국민체육센터', time: '화/목 11:00-12:00', level: '초급', fee: '월 50,000원' }
+                            { name: '초보자 헬스 교실', facility: '의왕국민체육센터', time: '화/목 11:00-12:00', level: '초급', fee: '월 50,000원', contact: '031-8086-7200' }
                         );
                     }
                 }
 
                 if (answers.preference === 'group') {
                     recommendations.programs.push(
-                        { name: '에어로빅', facility: '의왕국민체육센터', time: '월/수/금 10:00-11:00', level: '초급-중급', fee: '월 50,000원' },
-                        { name: '스포츠댄스', facility: '포일스포츠센터', time: '화/목/토 19:00-20:00', level: '전체', fee: '월 55,000원' }
+                        { name: '에어로빅', facility: '의왕국민체육센터', time: '월/수/금 10:00-11:00', level: '초중급', fee: '월 50,000원', contact: '031-8086-7200' },
+                        { name: '스포츠댄스', facility: '포일스포츠센터', time: '화/목/토 19:00-20:00', level: '전체', fee: '월 55,000원', contact: '031-8086-7100' },
+                        { name: '줌바댄스', facility: '백운커뮤니티센터', time: '월/수 19:00-20:00', level: '초중급', fee: '월 45,000원', contact: '031-8086-7400' }
                     );
                 }
 
                 if (answers.preference === 'court') {
                     recommendations.programs.push(
-                        { name: '배드민턴 (자유이용)', facility: '부곡스포츠센터', time: '06:00-22:00', level: '전체', fee: '회당 5,000원' },
-                        { name: '농구 (자유이용)', facility: '포일스포츠센터', time: '06:00-22:00', level: '전체', fee: '회당 5,000원' }
+                        { name: '배드민턴 (자유이용)', facility: '부곡스포츠센터', time: '06:00-22:00', level: '전체', fee: '회당 5,000원', contact: '031-8086-7300' },
+                        { name: '농구 (자유이용)', facility: '포일스포츠센터', time: '06:00-22:00', level: '전체', fee: '회당 5,000원', contact: '031-8086-7100' },
+                        { name: '배드민턴 강습', facility: '부곡스포츠센터', time: '화/목 19:00-20:00', level: '초중급', fee: '월 50,000원', contact: '031-8086-7300' }
                     );
                 }
 
                 if (answers.preference === 'mind_body') {
                     recommendations.programs.push(
-                        { name: '요가', facility: '백운커뮤니티센터', time: '월/수/금 10:00-11:00', level: '전체', fee: '월 50,000원' },
-                        { name: '필라테스', facility: '의왕국민체육센터', time: '화/목 19:00-20:00', level: '중급', fee: '월 55,000원' },
-                        { name: '프롭 테라피', facility: '포일스포츠센터', time: '월/수 14:00-15:00', level: '초급-중급', fee: '월 50,000원' }
+                        { name: '요가', facility: '백운커뮤니티센터', time: '월/수/금 10:00-11:00', level: '전체', fee: '월 50,000원', contact: '031-8086-7400' },
+                        { name: '필라테스', facility: '의왕국민체육센터', time: '화/목 19:00-20:00', level: '중급', fee: '월 55,000원', contact: '031-8086-7200' },
+                        { name: '프롭 테라피', facility: '포일스포츠센터', time: '월/수 14:00-15:00', level: '초중급', fee: '월 50,000원', contact: '031-8086-7100' }
                     );
                 }
 
                 // 시간대별 추가 추천
                 if (exerciseTime.includes('early')) {
                     recommendations.programs.push(
-                        { name: '아침 수영', facility: '의왕국민체육센터', time: '월~금 06:30-07:30', level: '전체', fee: '월 55,000원' }
+                        { name: '아침 수영', facility: '의왕국민체육센터', time: '월~금 06:30-07:30', level: '전체', fee: '월 55,000원', contact: '031-8086-7200' },
+                        { name: '새벽 헬스', facility: '포일스포츠센터', time: '06:00-08:00', level: '전체', fee: '월 35,000원', contact: '031-8086-7100' }
                     );
                 }
 
                 // 연령대별 특화 프로그램
                 if (answers.age === '60plus') {
                     recommendations.programs.push(
-                        { name: '시니어 건강 교실', facility: '백운커뮤니티센터', time: '월~금 10:00-11:00', level: '시니어', fee: '월 40,000원' },
-                        { name: '실버 수영', facility: '평생학습관수영장', time: '화/목 11:00-12:00', level: '시니어', fee: '월 50,000원' }
+                        { name: '시니어 건강 교실', facility: '백운커뮤니티센터', time: '월~금 10:00-11:00', level: '시니어', fee: '월 40,000원', contact: '031-8086-7400' },
+                        { name: '실버 수영', facility: '평생학습관수영장', time: '화/목 11:00-12:00', level: '시니어', fee: '월 50,000원', contact: '031-8086-7300' }
                     );
                 }
 
                 // 동반자별 추천
                 if (answers.companion === 'child') {
                     recommendations.programs.push(
-                        { name: '가족 수영 교실', facility: '포일스포츠센터', time: '토/일 10:00-11:00', level: '가족', fee: '월 70,000원' }
+                        { name: '가족 수영 교실', facility: '포일스포츠센터', time: '토/일 10:00-11:00', level: '가족', fee: '월 70,000원', contact: '031-8086-7100' }
                     );
                 }
 
                 // 초보자용 추천
                 if (fitnessLevel === 'low' || fitnessLevel === 'medium_low') {
                     recommendations.programs.push(
-                        { name: '기초 체력 단련반', facility: '백운커뮤니티센터', time: '월/수/금 11:00-12:00', level: '초급', fee: '월 45,000원' }
+                        { name: '기초 체력 단련반', facility: '백운커뮤니티센터', time: '월/수/금 11:00-12:00', level: '초급', fee: '월 45,000원', contact: '031-8086-7400' }
                     );
                 }
 
                 // 시설 정보
                 recommendations.facilities = [
-                    { name: '의왕국민체육센터', address: '경기도 의왕시 내손동', facilities: '수영장(6레인), 헬스장, 다목적체육관', time: '06:00-22:00' },
-                    { name: '포일스포츠센터', address: '경기도 의왕시 포일동', facilities: '수영장, 헬스장, GX룸, 다목적체육관', time: '06:00-22:00' },
-                    { name: '부곡스포츠센터', address: '경기도 의왕시 부곡동', facilities: '체육관, 헬스장, 배드민턴장', time: '06:00-22:00' },
-                    { name: '백운커뮤니티센터', address: '경기도 의왕시 백운호수', facilities: '다목적실, 강의실, GX룸', time: '09:00-21:00' },
-                    { name: '평생학습관수영장', address: '경기도 의왕시', facilities: '수영장(6레인)', time: '06:00-21:00' }
+                    { 
+                        name: '의왕국민체육센터', 
+                        address: '경기도 의왕시 내손동',
+                        facilities: '수영장(6레인), 헬스장, 다목적체육관, GX룸',
+                        time: '06:00-22:00',
+                        contact: '031-8086-7200',
+                        parking: '무료 주차 가능 (100대)'
+                    },
+                    { 
+                        name: '포일스포츠센터', 
+                        address: '경기도 의왕시 포일동',
+                        facilities: '수영장(8레인), 헬스장, GX룸, 다목적체육관, 농구장',
+                        time: '06:00-22:00',
+                        contact: '031-8086-7100',
+                        parking: '무료 주차 가능 (150대)'
+                    },
+                    { 
+                        name: '부곡스포츠센터', 
+                        address: '경기도 의왕시 부곡동',
+                        facilities: '체육관, 헬스장, 배드민턴장(6면)',
+                        time: '06:00-22:00',
+                        contact: '031-8086-7300',
+                        parking: '무료 주차 가능 (80대)'
+                    },
+                    { 
+                        name: '백운커뮤니티센터', 
+                        address: '경기도 의왕시 백운호수',
+                        facilities: '다목적실, 강의실, GX룸',
+                        time: '09:00-21:00',
+                        contact: '031-8086-7400',
+                        parking: '무료 주차 가능 (50대)'
+                    },
+                    { 
+                        name: '평생학습관수영장', 
+                        address: '경기도 의왕시 중심동',
+                        facilities: '수영장(6레인)',
+                        time: '06:00-21:00',
+                        contact: '031-8086-7300',
+                        parking: '무료 주차 가능 (60대)'
+                    }
                 ];
 
                 // 중복 제거
@@ -398,40 +477,94 @@
                 return !!answers[currentQuestion.id];
             };
 
+            const handleDownloadPDF = () => {
+                const element = resultRef.current;
+                const opt = {
+                    margin: 10,
+                    filename: '의왕도시공사_맞춤운동추천.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                
+                html2pdf().set(opt).from(element).save();
+            };
+
+            const handleShare = () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: '의왕도시공사 맞춤 운동 추천',
+                        text: '나에게 딱 맞는 운동을 찾아보세요!',
+                        url: window.location.href
+                    }).catch(err => console.log('Error sharing:', err));
+                } else {
+                    alert('이 브라우저는 공유 기능을 지원하지 않습니다.');
+                }
+            };
+
             if (result) {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-                        <div className="max-w-4xl mx-auto">
-                            <div className="bg-white rounded-2xl shadow-xl p-8">
-                                <div className="text-center mb-8">
-                                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                                        <Award className="w-8 h-8 text-green-600" />
+                    <div className="min-h-screen bg-gray-50">
+                        {/* 헤더 */}
+                        <header className="bg-white shadow-sm border-b border-gray-200 no-print">
+                            <div className="max-w-7xl mx-auto px-4 py-4">
+                                <div className="flex items-center space-x-4">
+                                    <div className="text-2xl font-bold">
+                                        <span style={{color: '#FF8C42'}}>공통</span>
+                                        <span className="text-gray-400">·</span>
+                                        <span style={{color: '#8BC34A'}}>소통</span>
+                                        <span className="text-gray-400">·</span>
+                                        <span style={{color: '#1976D2'}}>통통</span>
                                     </div>
-                                    <h2 className="text-3xl font-bold text-gray-800 mb-2">🎉 짜잔! 딱 맞는 운동을 찾았어요!</h2>
-                                    <p className="text-gray-600">회원님을 위해 특별히 준비한 맞춤 프로그램이에요 💝</p>
-                                    <p className="text-sm text-blue-600 font-semibold mt-2">✨ 지금 바로 시작해볼까요? ✨</p>
+                                    <div className="border-l-2 border-gray-300 pl-4">
+                                        <h1 className="text-lg font-bold text-gray-800">의왕도시공사</h1>
+                                        <p className="text-xs text-gray-500">맞춤 운동 추천 시스템</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div className="max-w-6xl mx-auto p-4 py-8" ref={resultRef}>
+                            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+                                {/* 결과 헤더 */}
+                                <div className="text-center mb-8 pb-6 border-b-2 border-gray-200">
+                                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full mb-4">
+                                        <Award className="w-10 h-10 text-orange-500" />
+                                    </div>
+                                    <h2 className="text-4xl font-bold text-gray-900 mb-3">맞춤 운동 추천 결과</h2>
+                                    <p className="text-lg text-gray-600 mb-2">회원님의 응답을 바탕으로 최적의 운동 프로그램을 추천해드립니다</p>
+                                    <p className="text-sm font-semibold" style={{color: '#FF8C42'}}>지금 바로 시작하여 건강한 삶을 만들어가세요!</p>
                                 </div>
 
                                 {/* 추천 운동 */}
-                                <div className="mb-8">
-                                    <div className="flex items-center mb-4">
-                                        <Activity className="w-6 h-6 text-blue-600 mr-2" />
-                                        <h3 className="text-2xl font-bold text-gray-800">💪 이런 운동 어때요?</h3>
+                                <div className="mb-10">
+                                    <div className="flex items-center mb-6">
+                                        <div className="w-1 h-8 mr-3" style={{background: 'linear-gradient(to bottom, #FF8C42, #FF7B2E)'}}></div>
+                                        <h3 className="text-2xl font-bold text-gray-800">추천 운동 프로그램</h3>
                                     </div>
-                                    <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="grid md:grid-cols-2 gap-5">
                                         {result.exercises.map((exercise, index) => (
-                                            <div key={index} className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
-                                                <h4 className="text-xl font-bold text-gray-800 mb-2">{exercise.name}</h4>
-                                                <p className="text-gray-600 mb-4">{exercise.desc}</p>
-                                                <div className="space-y-2">
-                                                    <div className="flex items-center text-sm">
-                                                        <Target className="w-4 h-4 text-blue-600 mr-2" />
-                                                        <span className="text-gray-700">운동 시간: <strong>{exercise.duration}</strong></span>
+                                            <div key={index} className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border-2 border-orange-200 hover:shadow-md transition-shadow">
+                                                <h4 className="text-xl font-bold text-gray-900 mb-2 flex items-center">
+                                                    <Activity className="w-5 h-5 mr-2" style={{color: '#FF8C42'}} />
+                                                    {exercise.name}
+                                                </h4>
+                                                <p className="text-gray-700 mb-4">{exercise.desc}</p>
+                                                <div className="space-y-2 text-sm">
+                                                    <div className="flex items-center text-gray-700">
+                                                        <Target className="w-4 h-4 mr-2" style={{color: '#FF8C42'}} />
+                                                        <span>운동 시간: <strong>{exercise.duration}</strong></span>
                                                     </div>
-                                                    <div className="flex items-center text-sm">
-                                                        <Calendar className="w-4 h-4 text-blue-600 mr-2" />
-                                                        <span className="text-gray-700">권장 횟수: <strong>{exercise.frequency}</strong></span>
+                                                    <div className="flex items-center text-gray-700">
+                                                        <Calendar className="w-4 h-4 mr-2" style={{color: '#FF8C42'}} />
+                                                        <span>권장 횟수: <strong>{exercise.frequency}</strong></span>
                                                     </div>
+                                                    {exercise.calories && (
+                                                        <div className="flex items-center text-gray-700">
+                                                            <Heart className="w-4 h-4 mr-2" style={{color: '#FF8C42'}} />
+                                                            <span>칼로리 소모: <strong>{exercise.calories}</strong></span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         ))}
@@ -439,40 +572,49 @@
                                 </div>
 
                                 {/* 운영 프로그램 */}
-                                <div className="mb-8">
-                                    <div className="flex items-center mb-4">
-                                        <Users className="w-6 h-6 text-purple-600 mr-2" />
-                                        <h3 className="text-2xl font-bold text-gray-800">🎯 딱! 맞는 프로그램</h3>
+                                <div className="mb-10">
+                                    <div className="flex items-center mb-6">
+                                        <div className="w-1 h-8 mr-3" style={{background: 'linear-gradient(to bottom, #8BC34A, #7CB342)'}}></div>
+                                        <h3 className="text-2xl font-bold text-gray-800">신청 가능 프로그램</h3>
                                     </div>
-                                    <div className="space-y-3">
+                                    <div className="space-y-4">
                                         {result.programs.map((program, index) => (
-                                            <div key={index} className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-5 border-2 border-purple-200 hover:shadow-md transition-shadow">
+                                            <div key={index} className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200 hover:shadow-md transition-shadow">
                                                 <div className="flex items-start justify-between">
                                                     <div className="flex-1">
-                                                        <h4 className="text-lg font-bold text-gray-800 mb-1">{program.name}</h4>
-                                                        <p className="text-sm text-purple-700 font-semibold mb-3">{program.facility}</p>
-                                                        <div className="grid md:grid-cols-3 gap-3 text-sm">
-                                                            <div className="flex items-center">
-                                                                <Calendar className="w-4 h-4 text-purple-600 mr-2 flex-shrink-0" />
-                                                                <span className="text-gray-700">{program.time}</span>
+                                                        <h4 className="text-xl font-bold text-gray-900 mb-1">{program.name}</h4>
+                                                        <p className="text-base font-semibold mb-4" style={{color: '#8BC34A'}}>{program.facility}</p>
+                                                        <div className="grid md:grid-cols-4 gap-4 text-sm">
+                                                            <div className="flex items-center text-gray-700">
+                                                                <Calendar className="w-4 h-4 mr-2 flex-shrink-0" style={{color: '#8BC34A'}} />
+                                                                <span>{program.time}</span>
                                                             </div>
-                                                            <div className="flex items-center">
-                                                                <Target className="w-4 h-4 text-purple-600 mr-2 flex-shrink-0" />
-                                                                <span className="text-gray-700">수준: {program.level}</span>
+                                                            <div className="flex items-center text-gray-700">
+                                                                <Target className="w-4 h-4 mr-2 flex-shrink-0" style={{color: '#8BC34A'}} />
+                                                                <span>수준: {program.level}</span>
                                                             </div>
-                                                            <div className="flex items-center">
-                                                                <Heart className="w-4 h-4 text-purple-600 mr-2 flex-shrink-0" />
-                                                                <span className="text-gray-700 font-semibold">{program.fee}</span>
+                                                            <div className="flex items-center text-gray-700">
+                                                                <Heart className="w-4 h-4 mr-2 flex-shrink-0" style={{color: '#8BC34A'}} />
+                                                                <span className="font-semibold">{program.fee}</span>
+                                                            </div>
+                                                            <div className="flex items-center text-gray-700">
+                                                                <Phone className="w-4 h-4 mr-2 flex-shrink-0" style={{color: '#8BC34A'}} />
+                                                                <span>{program.contact}</span>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    
                                                     <a
                                                         href="https://reserve.uuc.or.kr/fmcs/3"
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="ml-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold whitespace-nowrap inline-block"
+                                                        className="ml-4 px-5 py-3 text-white rounded-lg transition-colors text-sm font-semibold whitespace-nowrap inline-flex items-center no-print"
+                                                        style={{backgroundColor: '#8BC34A'}}
+                                                        onMouseOver={(e) => e.target.style.backgroundColor = '#7CB342'}
+                                                        onMouseOut={(e) => e.target.style.backgroundColor = '#8BC34A'}
                                                     >
-                                                        ✨ 신청하기
+                                                        <span>신청하기</span>
+                                                        <ChevronRight className="w-4 h-4 ml-1" />
                                                     </a>
                                                 </div>
                                             </div>
@@ -481,67 +623,148 @@
                                 </div>
 
                                 {/* 이용 가능 시설 */}
-                                <div className="mb-8">
-                                    <div className="flex items-center mb-4">
-                                        <Activity className="w-6 h-6 text-indigo-600 mr-2" />
-                                        <h3 className="text-2xl font-bold text-gray-800">🏢 어디서 운동할까요?</h3>
+                                <div className="mb-10">
+                                    <div className="flex items-center mb-6">
+                                        <div className="w-1 h-8 mr-3" style={{background: 'linear-gradient(to bottom, #1976D2, #1565C0)'}}></div>
+                                        <h3 className="text-2xl font-bold text-gray-800">시설 안내</h3>
                                     </div>
-                                    <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="grid md:grid-cols-2 gap-5">
                                         {result.facilities.map((facility, index) => (
-                                            <div key={index} className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-5 border-2 border-indigo-200">
-                                                <h4 className="text-lg font-bold text-gray-800 mb-2">{facility.name}</h4>
-                                                <p className="text-sm text-gray-600 mb-3">{facility.address}</p>
-                                                <div className="space-y-2">
+                                            <div key={index} className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200">
+                                                <h4 className="text-xl font-bold text-gray-900 mb-3">{facility.name}</h4>
+                                                <div className="space-y-3 text-sm">
                                                     <div className="flex items-start">
-                                                        <Target className="w-4 h-4 text-indigo-600 mr-2 mt-1 flex-shrink-0" />
-                                                        <p className="text-sm text-gray-700">{facility.facilities}</p>
+                                                        <MapPin className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{color: '#1976D2'}} />
+                                                        <p className="text-gray-700">{facility.address}</p>
+                                                    </div>
+                                                    <div className="flex items-start">
+                                                        <Activity className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{color: '#1976D2'}} />
+                                                        <p className="text-gray-700">{facility.facilities}</p>
                                                     </div>
                                                     <div className="flex items-center">
-                                                        <Calendar className="w-4 h-4 text-indigo-600 mr-2 flex-shrink-0" />
-                                                        <p className="text-sm text-gray-700">운영시간: {facility.time}</p>
+                                                        <Calendar className="w-4 h-4 mr-2 flex-shrink-0" style={{color: '#1976D2'}} />
+                                                        <p className="text-gray-700">운영시간: {facility.time}</p>
                                                     </div>
+                                                    <div className="flex items-center">
+                                                        <Phone className="w-4 h-4 mr-2 flex-shrink-0" style={{color: '#1976D2'}} />
+                                                        <p className="text-gray-700">연락처: {facility.contact}</p>
+                                                    </div>
+                                                    {facility.parking && (
+                                                        <div className="flex items-center">
+                                                            <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{color: '#1976D2'}}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                                            </svg>
+                                                            <p className="text-gray-700">{facility.parking}</p>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
-                                {/* 안내 메시지 */}
+                                {/* 안내사항 */}
                                 <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200 mb-6">
                                     <div className="flex items-start">
-                                        <Heart className="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
+                                        <Heart className="w-6 h-6 mr-3 flex-shrink-0 mt-1" style={{color: '#1976D2'}} />
                                         <div>
-                                            <h4 className="font-bold text-gray-800 mb-2">📢 잠깐! 신청하기 전에 체크!</h4>
-                                            <ul className="text-sm text-gray-700 space-y-1">
-                                                <li>• 🌐 <strong>reserve.uuc.or.kr/fmcs/3</strong>에서 모든 프로그램 신청 가능! (간편해요)</li>
-                                                <li>• 📅 매월 1일부터 말일까지 한 달 단위로 운영돼요</li>
-                                                <li>• 💰 의왕시민이라면? 3개월 등록 시 <strong>10% 할인</strong> 득템!</li>
-                                                <li>• 🏃 운동 전 준비운동은 필수! (다치면 안 돼요)</li>
-                                                <li>• 😣 통증이 느껴지면 무리하지 말고 쉬어가세요~</li>
-                                                <li>• 💪 꾸준함이 답! 함께 건강해져요!</li>
+                                            <h4 className="font-bold text-gray-900 mb-3 text-lg">이용 안내</h4>
+                                            <ul className="text-sm text-gray-700 space-y-2">
+                                                <li className="flex items-start">
+                                                    <span style={{color: '#1976D2'}} className="mr-2">•</span>
+                                                    <span>온라인 신청: <strong style={{color: '#1976D2'}}>reserve.uuc.or.kr/fmcs/3</strong></span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <span style={{color: '#1976D2'}} className="mr-2">•</span>
+                                                    <span>운영기간: 매월 1일 ~ 말일 (1개월 단위 운영)</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <span style={{color: '#1976D2'}} className="mr-2">•</span>
+                                                    <span><strong style={{color: '#FF8C42'}}>의왕시민 할인:</strong> 3개월 이상 등록 시 10% 할인</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <span style={{color: '#1976D2'}} className="mr-2">•</span>
+                                                    <span>준비물: 운동복, 실내화, 개인 수건</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <span style={{color: '#1976D2'}} className="mr-2">•</span>
+                                                    <span>안전을 위해 운동 전 스트레칭은 필수입니다</span>
+                                                </li>
+                                                <li className="flex items-start">
+                                                    <span style={{color: '#1976D2'}} className="mr-2">•</span>
+                                                    <span>건강상 문제가 있으신 경우 담당 강사와 상담 후 이용해주세요</span>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* 버튼 */}
-                                <div className="flex gap-3">
+                                {/* 버튼 영역 */}
+                                <div className="flex flex-wrap gap-3 no-print">
                                     <button
                                         onClick={handleReset}
-                                        className="flex-1 px-6 py-4 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors font-semibold text-lg"
+                                        className="flex-1 min-w-[200px] px-6 py-4 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors font-semibold text-base flex items-center justify-center"
                                     >
-                                        🔄 다시 해볼래요!
+                                        <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                        다시 진단하기
                                     </button>
+                                    <button
+                                        onClick={handleDownloadPDF}
+                                        className="flex-1 min-w-[200px] px-6 py-4 text-white rounded-xl transition-colors font-semibold text-base flex items-center justify-center"
+                                        style={{backgroundColor: '#FF8C42'}}
+                                        onMouseOver={(e) => e.target.style.backgroundColor = '#FF7B2E'}
+                                        onMouseOut={(e) => e.target.style.backgroundColor = '#FF8C42'}
+                                    >
+                                        <Download className="w-5 h-5 mr-2" />
+                                        PDF 다운로드
+                                    </button>
+                                    <button
+                                        onClick={handleShare}
+                                        className="flex-1 min-w-[200px] px-6 py-4 text-white rounded-xl transition-colors font-semibold text-base flex items-center justify-center"
+                                        style={{backgroundColor: '#8BC34A'}}
+                                        onMouseOver={(e) => e.target.style.backgroundColor = '#7CB342'}
+                                        onMouseOut={(e) => e.target.style.backgroundColor = '#8BC34A'}
+                                    >
+                                        <Share className="w-5 h-5 mr-2" />
+                                        공유하기
+                                    </button>
+                                    
                                     <a
                                         href="https://www.uuc.or.kr"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-colors font-semibold text-lg text-center"
+                                        className="flex-1 min-w-[200px] px-6 py-4 text-white rounded-xl transition-colors font-semibold text-base text-center flex items-center justify-center"
+                                        style={{backgroundColor: '#1976D2'}}
+                                        onMouseOver={(e) => e.target.style.backgroundColor = '#1565C0'}
+                                        onMouseOut={(e) => e.target.style.backgroundColor = '#1976D2'}
                                     >
-                                        🏢 의왕도시공사 홈페이지 가기
+                                        <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                        </svg>
+                                        도시공사 홈페이지
                                     </a>
                                 </div>
                             </div>
+
+                            {/* 푸터 */}
+                            <footer className="bg-white rounded-xl p-6 shadow-sm text-center text-sm text-gray-600">
+                                <div className="mb-4">
+                                    <p className="font-bold text-gray-800 mb-2">의왕도시공사 체육시설 운영팀</p>
+                                    <p className="mb-1">경기도 의왕시 사천2길 6 (왕곡동)</p>
+                                    <p className="mb-1">대표전화: 031-8086-7000 | 팩스: 031-8086-7339</p>
+                                    <p>홈페이지: <a href="https://www.uuc.or.kr" className="hover:underline" style={{color: '#1976D2'}}>www.uuc.or.kr</a></p>
+                                </div>
+                                <div className="border-t border-gray-200 pt-4">
+                                    <p className="text-xs text-gray-500">
+                                        본 추천 결과는 참고용이며, 개인의 건강 상태에 따라 전문가와 상담 후 운동하시기 바랍니다.
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        © 2024 의왕도시공사. All rights reserved.
+                                    </p>
+                                </div>
+                            </footer>
                         </div>
                     </div>
                 );
@@ -550,37 +773,63 @@
             const currentQuestion = questions[currentStep];
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-                    <div className="max-w-3xl mx-auto py-8">
-                        {/* 헤더 */}
+                <div className="min-h-screen bg-gray-50">
+                    {/* 헤더 */}
+                    <header className="bg-white shadow-sm border-b border-gray-200">
+                        <div className="max-w-7xl mx-auto px-4 py-4">
+                            <div className="flex items-center space-x-4">
+                                <div className="text-2xl font-bold">
+                                    <span style={{color: '#FF8C42'}}>공통</span>
+                                    <span className="text-gray-400">·</span>
+                                    <span style={{color: '#8BC34A'}}>소통</span>
+                                    <span className="text-gray-400">·</span>
+                                    <span style={{color: '#1976D2'}}>통통</span>
+                                </div>
+                                <div className="border-l-2 border-gray-300 pl-4">
+                                    <h1 className="text-lg font-bold text-gray-800">의왕도시공사</h1>
+                                    <p className="text-xs text-gray-500">맞춤 운동 추천 시스템</p>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div className="max-w-3xl mx-auto px-4 py-8">
+                        {/* 인트로 */}
                         <div className="text-center mb-8">
-                            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 uuc-gradient">
                                 <Activity className="w-8 h-8 text-white" />
                             </div>
-                            <h1 className="text-4xl font-bold text-gray-800 mb-2">💪 나에게 딱 맞는 운동 찾기!</h1>
-                            <p className="text-gray-600 text-lg">9개 질문으로 알아보는 맞춤 운동 추천 🎯</p>
-                            <p className="text-sm text-gray-500 mt-2">의왕도시공사가 여러분의 건강을 응원합니다! 🎉</p>
+                            <h2 className="text-3xl font-bold text-gray-900 mb-2">나에게 맞는 운동 찾기</h2>
+                            <p className="text-lg text-gray-600">9가지 질문으로 최적의 운동 프로그램을 추천해드립니다</p>
+                            <p className="text-sm text-gray-500 mt-2">의왕도시공사가 시민 여러분의 건강한 삶을 응원합니다</p>
                         </div>
 
                         {/* 진행률 */}
                         <div className="mb-8">
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm font-semibold text-gray-600">
-                                    {currentStep < 3 ? '🚀 좋아요! 계속 가볼까요?' : currentStep < 6 ? '💪 절반 넘었어요!' : '🎉 거의 다 왔어요!'}
+                                <span className="text-sm font-semibold text-gray-700">
+                                    질문 {currentStep + 1} / {questions.length}
                                 </span>
-                                <span className="text-sm font-semibold text-blue-600">{currentStep + 1} / {questions.length}</span>
+                                <span className="text-sm font-semibold" style={{color: '#FF8C42'}}>
+                                    {Math.round(((currentStep + 1) / questions.length) * 100)}%
+                                </span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-3">
+                            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                                 <div
-                                    className="bg-gradient-to-r from-blue-600 to-indigo-600 h-3 rounded-full transition-all duration-300"
+                                    className="h-3 rounded-full transition-all duration-500 ease-out uuc-gradient"
                                     style={{ width: `${((currentStep + 1) / questions.length) * 100}%` }}
                                 />
                             </div>
                         </div>
 
                         {/* 질문 카드 */}
-                        <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6">{currentQuestion.question}</h2>
+                        <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+                            <div className="flex items-start mb-6">
+                                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4 flex-shrink-0 uuc-gradient">
+                                    {currentStep + 1}
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 leading-tight">{currentQuestion.question}</h3>
+                            </div>
                             
                             <div className="space-y-3">
                                 {currentQuestion.options.map((option) => {
@@ -592,23 +841,29 @@
                                         <button
                                             key={option.value}
                                             onClick={() => handleAnswer(currentQuestion.id, option.value, currentQuestion.type === 'multiple', currentQuestion.maxSelect)}
-                                            className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                                            className={`w-full p-5 rounded-xl border-2 transition-all text-left ${
                                                 isSelected
-                                                    ? 'border-blue-600 bg-blue-50 shadow-md'
-                                                    : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                                                    ? 'bg-orange-50 shadow-md'
+                                                    : 'border-gray-200 hover:bg-orange-50'
                                             }`}
+                                            style={{
+                                                borderColor: isSelected ? '#FF8C42' : undefined
+                                            }}
                                         >
                                             <div className="flex items-center">
-                                                <div className={`w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center ${
-                                                    isSelected ? 'border-blue-600 bg-blue-600' : 'border-gray-300'
-                                                }`}>
+                                                <div className={`w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center flex-shrink-0`}
+                                                     style={{
+                                                         borderColor: isSelected ? '#FF8C42' : '#D1D5DB',
+                                                         backgroundColor: isSelected ? '#FF8C42' : 'transparent'
+                                                     }}>
                                                     {isSelected && (
                                                         <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                                         </svg>
                                                     )}
                                                 </div>
-                                                <span className={`text-lg ${isSelected ? 'font-semibold text-blue-900' : 'text-gray-700'}`}>
+                                                <span className={`text-base ${isSelected ? 'font-semibold' : 'text-gray-700'}`}
+                                                      style={{color: isSelected ? '#C65D1E' : undefined}}>
                                                     {option.label}
                                                 </span>
                                             </div>
@@ -618,9 +873,13 @@
                             </div>
 
                             {currentQuestion.type === 'multiple' && (
-                                <p className="text-sm text-gray-500 mt-4">
-                                    * {currentQuestion.maxSelect ? `최대 ${currentQuestion.maxSelect}개까지 선택 가능합니다` : '해당되는 항목을 모두 선택해주세요'}
-                                </p>
+                                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                    <p className="text-sm" style={{color: '#1976D2'}}>
+                                        {currentQuestion.maxSelect 
+                                            ? `* 최대 ${currentQuestion.maxSelect}개까지 선택 가능합니다`
+                                            : '* 해당되는 항목을 모두 선택해주세요'}
+                                    </p>
+                                </div>
                             )}
                         </div>
 
@@ -629,23 +888,34 @@
                             {currentStep > 0 && (
                                 <button
                                     onClick={() => setCurrentStep(currentStep - 1)}
-                                    className="px-6 py-4 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold"
+                                    className="px-6 py-4 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold flex items-center"
                                 >
-                                    ⬅️ 이전
+                                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    이전
                                 </button>
                             )}
                             <button
                                 onClick={handleNext}
                                 disabled={!isAnswered()}
-                                className={`flex-1 px-6 py-4 rounded-xl font-semibold text-lg flex items-center justify-center transition-all ${
-                                    isAnswered()
-                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-lg'
-                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                className={`flex-1 px-6 py-4 rounded-xl font-semibold text-lg flex items-center justify-center transition-all text-white ${
+                                    !isAnswered() && 'opacity-50 cursor-not-allowed'
                                 }`}
+                                style={{
+                                    background: isAnswered() ? 'linear-gradient(135deg, #FF8C42 0%, #8BC34A 50%, #1976D2 100%)' : '#D1D5DB'
+                                }}
                             >
-                                {currentStep === questions.length - 1 ? '🎁 결과 확인!' : '다음 ➡️'}
+                                {currentStep === questions.length - 1 ? '결과 확인하기' : '다음'}
                                 <ChevronRight className="w-5 h-5 ml-2" />
                             </button>
+                        </div>
+
+                        {/* 도움말 */}
+                        <div className="mt-6 text-center">
+                            <p className="text-sm text-gray-500">
+                                문의: 의왕도시공사 체육시설 운영팀 <span className="font-semibold">031-8086-7000</span>
+                            </p>
                         </div>
                     </div>
                 </div>
